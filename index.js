@@ -21,14 +21,41 @@ function createMinecraftBot() {
 
   mcBot.on('spawn', () => {
     console.log('Bot de Minecraft conectado.');
-
-
+    for (const playerName of Object.keys(mcBot.players)) {
+      onlinePlayers.add(playerName);
+    }
   });
 
   mcBot.on('end', () => {
     console.log('El bot de Minecraft se ha desconectado.');
     // Aquí podrías notificar en Discord que el bot se desconectó, o reintentar la conexión.
   });
+
+  mcBot.on('playerJoined', (player) => {
+    // Si no está en el set, es una conexión "real"
+    if (!onlinePlayers.has(player.username)) {
+      onlinePlayers.add(player.username);
+      if (player.username === 'chipinazo') {
+        mcBot.chat('Creator! Welcome back genius.');
+      } 
+    }
+      const channel = discordClient.channels.cache.get(process.env.CHANNEL_ID);
+      if (channel) {
+        channel.send(`${player.username} se ha unido al servidor de Minecraft.`);
+      }
+  });
+  
+  mcBot.on('playerLeft', (player) => {
+    if (onlinePlayers.has(player.username)) {
+      onlinePlayers.delete(player.username);
+      // Anuncias la desconexión
+    }
+    const channel = discordClient.channels.cache.get(process.env.CHANNEL_ID);
+    if (channel) {
+      channel.send(`${player.username} salió del servidor de Minecraft.`);
+    }
+  });
+  
 
   mcBot.on('error', (err) => {
     console.error('Error en el bot de Minecraft:', err);
