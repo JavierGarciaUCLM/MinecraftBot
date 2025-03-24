@@ -1,0 +1,14 @@
+{
+    "name": "minecraft-discord-bot",
+    "version": "1.0.0",
+    "description": "Bot de Minecraft controlado desde Discord",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js"
+    },
+    "dependencies": {
+        "discord.js": "^14.0.0",
+        "dotenv": "^16.4.7",
+        "mineflayer": "^4.27.0"
+    }
+}
