@@ -13,9 +13,9 @@ function createMinecraftBot() {
     host: process.env.MC_HOST,
     port: Number(process.env.MC_PORT),
     username: process.env.MC_USERNAME,
-    password: process.env.MC_PASSWORD,
     auth: 'microsoft',
-    version: "1.21.4"
+    refreshToken: process.env.REFRESH_TOKEN,
+    version: '1.21.4'
   });
 
   mcBot.on('spawn', () => {
