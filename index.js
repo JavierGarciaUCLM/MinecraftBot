@@ -34,7 +34,7 @@ function createMinecraftBot() {
   mcBot.on('playerJoined', (player) => {
     console.log(`${player.username} se ha unido al servidor`);
     if (player.username === 'chipinazo') {
-      bot.chat('Welcome back, mister creator!');
+      mcBot.chat('Creator! Welcome back genius.');
     }
     // O enviar un mensaje al chat:
     // bot.chat(`¡Bienvenido, ${player.username}!`);
