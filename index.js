@@ -57,44 +57,55 @@ function createMinecraftBot() {
 //
 //  
 //
-  function loadDatabase() {
-    if (!fs.existsSync(path)) {
-      fs.writeFileSync(path, JSON.stringify({}));
-    }
-    const data = fs.readFileSync(path);
+function loadDatabase() {
+  if (!fs.existsSync(path)) {
+    // Solo se crea si no existe
+    fs.writeFileSync(path, JSON.stringify({}));
+  }
+  try {
+    const data = fs.readFileSync(path, 'utf8');
     return JSON.parse(data);
+  } catch (err) {
+    console.error('Error leyendo la base de datos:', err);
+    return {};
   }
-  
-  // Función para guardar la base de datos JSON
-  function saveDatabase(db) {
+}
+
+// Función para guardar la base de datos JSON
+function saveDatabase(db) {
+  try {
     fs.writeFileSync(path, JSON.stringify(db, null, 2));
+  } catch (err) {
+    console.error('Error guardando la base de datos:', err);
   }
-  
-  // Función para otorgar puntos si han pasado 8 horas
-  function processInquisition(minecraftUsername) {
-    const db = loadDatabase();
-    const now = Date.now();
-    const eightHours = 8 * 60 * 60 * 1000; // 8 horas en milisegundos
-  
-    if (!db[minecraftUsername]) {
-      // Si el usuario no existe, lo inicializamos
-      db[minecraftUsername] = {
-        points: 0,
-        lastInquisition: 0
-      };
-    }
-  
-    // Comprueba si han pasado 8 horas desde el último uso del comando
-    if (now - db[minecraftUsername].lastInquisition >= eightHours) {
-      db[minecraftUsername].points += 25;
-      db[minecraftUsername].lastInquisition = now;
-      saveDatabase(db);
-      return { success: true, points: db[minecraftUsername].points };
-    } else {
-      const remaining = eightHours - (now - db[minecraftUsername].lastInquisition);
-      return { success: false, remaining };
-    }
+}
+
+// Función para otorgar puntos si han pasado 8 horas
+function processInquisition(minecraftUsername) {
+  const db = loadDatabase();
+  const now = Date.now();
+  const eightHours = 8 * 60 * 60 * 1000; // 8 horas en milisegundos
+
+  if (!db[minecraftUsername]) {
+    // Inicializa el usuario si no existe
+    db[minecraftUsername] = {
+      points: 0,
+      lastInquisition: 0
+    };
   }
+
+  // Comprueba si han pasado 8 horas desde el último uso del comando
+  if (now - db[minecraftUsername].lastInquisition >= eightHours) {
+    db[minecraftUsername].points += 25;
+    db[minecraftUsername].lastInquisition = now;
+    saveDatabase(db);
+    return { success: true, points: db[minecraftUsername].points };
+  } else {
+    const remaining = eightHours - (now - db[minecraftUsername].lastInquisition);
+    return { success: false, remaining };
+  }
+}
+
 
 //
 //
