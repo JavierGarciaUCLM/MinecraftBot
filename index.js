@@ -17,25 +17,6 @@ const mensajesAleatorios = [
 ];
 
 
-if (player.username === 'chipinazo') {
-  mcBot.chat('Creator! Welcome back genius.');
-}
-if (player.username === '_letrasado') {
-  mcBot.chat('Welcome back Letrasado, kisses from el Copas.');
-}
-if (player.username === 'MrDavid99') {
-  mcBot.chat('Hey David! I also hate polish and albanians.');
-}
-if (player.username === 'Diakhaba') {
-  mcBot.chat('Cómo te huelen los pinrreles.');
-}
-if (player.username === 'marcosgo16') {
-  mcBot.chat('Ponte a trabajar bujarra!');
-}
-if (player.username === 'PowerXInfinito') {
-  mcBot.chat('Paño de pipí mojao');
-}
-
 function createMinecraftBot() {
   mcBot = mineflayer.createBot({
     host: process.env.MC_HOST,
