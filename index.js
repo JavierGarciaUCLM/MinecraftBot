@@ -7,7 +7,7 @@ require('dotenv').config(); // Carga variables de .env
 
 // 2. Configuración del bot de Minecraft
 let mcBot; // Variable global para el bot de Minecraft
-
+const onlinePlayers = new Set();
 
 function createMinecraftBot() {
   mcBot = mineflayer.createBot({
