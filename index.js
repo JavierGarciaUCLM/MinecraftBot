@@ -9,8 +9,6 @@ require('dotenv').config(); // Carga variables de .env
 let mcBot; // Variable global para el bot de Minecraft
 const onlinePlayers = new Set(); //Set de users
 let initialLoad = true;
-const fs = require('fs');
-const path = './economy.json';
 
 const mensajesAleatorios = [
   'I love the Spanish!',
@@ -52,65 +50,6 @@ function createMinecraftBot() {
     const mensaje = mensajesAleatorios[indiceAleatorio];
     mcBot.chat(mensaje);
   }
-
-
-//
-//  
-//
-function loadDatabase() {
-  if (!fs.existsSync(path)) {
-    // Solo se crea si no existe
-    fs.writeFileSync(path, JSON.stringify({}));
-  }
-  try {
-    const data = fs.readFileSync(path, 'utf8');
-    return JSON.parse(data);
-  } catch (err) {
-    console.error('Error leyendo la base de datos:', err);
-    return {};
-  }
-}
-
-// Función para guardar la base de datos JSON
-function saveDatabase(db) {
-  try {
-    fs.writeFileSync(path, JSON.stringify(db, null, 2));
-  } catch (err) {
-    console.error('Error guardando la base de datos:', err);
-  }
-}
-
-// Función para otorgar puntos si han pasado 8 horas
-function processInquisition(minecraftUsername) {
-  const db = loadDatabase();
-  const now = Date.now();
-  const eightHours = 8 * 60 * 60 * 1000; // 8 horas en milisegundos
-
-  if (!db[minecraftUsername]) {
-    // Inicializa el usuario si no existe
-    db[minecraftUsername] = {
-      points: 0,
-      lastInquisition: 0
-    };
-  }
-
-  // Comprueba si han pasado 8 horas desde el último uso del comando
-  if (now - db[minecraftUsername].lastInquisition >= eightHours) {
-    db[minecraftUsername].points += 25;
-    db[minecraftUsername].lastInquisition = now;
-    saveDatabase(db);
-    return { success: true, points: db[minecraftUsername].points };
-  } else {
-    const remaining = eightHours - (now - db[minecraftUsername].lastInquisition);
-    return { success: false, remaining };
-  }
-}
-
-
-//
-//
-//
-
 
   mcBot.on('spawn', () => {
     console.log('Bot de Minecraft conectado.');
@@ -154,6 +93,9 @@ function processInquisition(minecraftUsername) {
       if (player.username === 'PowerXInfinito') {
         mcBot.chat('Paño de pipí mojao');
       }
+      if (player.username === 'Juane9') {
+        mcBot.chat('Joseeeee, tienes la libreta con los ejercicios cariño?');
+      }
     }
       const channel = discordClient.channels.cache.get(process.env.CHANNEL_ID);
       if (channel) {
@@ -186,22 +128,6 @@ function processInquisition(minecraftUsername) {
       } else {
         channel.send(`[${username}] ${message}`);
       }
-    }
-    if (message.toLowerCase() === '!inquisition') {
-      const result = processInquisition(username);
-      if (result.success) {
-        mcBot.chat(`${username}, you have recived 25 InquiCoins. Your total bank account is ${result.points}. ¡Viva España!`);
-      } else {
-        const minutes = Math.ceil(result.remaining / (60 * 1000));
-        mcBot.chat(`${username}, you must wait ${minutes} minutes to get more InquiCoins.`);
-      }
-    }
-  
-    if (message.toLowerCase() === '!bank') {
-      const db = loadDatabase();
-      // Si el usuario no existe, su saldo es 0
-      const account = db[username] ? db[username].points : 0;
-      mcBot.chat(`${username}, your InquiCoins balance is ${account}. ¡Viva España!`);
     }
   });
 }
