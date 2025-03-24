@@ -8,6 +8,15 @@ require('dotenv').config(); // Carga variables de .env
 // 2. Configuración del bot de Minecraft
 let mcBot; // Variable global para el bot de Minecraft
 
+const mensajesAleatorios = [
+  'I love the Spanish!',
+  'Best clan? The Inquisition.',
+  'Inquisition is always back, no matter what!',
+  'Inquisition won',
+  'We miss you npintea...',
+  'Nikoxlas? Who is him?'
+];
+
 function createMinecraftBot() {
   mcBot = mineflayer.createBot({
     host: process.env.MC_HOST,
@@ -20,6 +29,18 @@ function createMinecraftBot() {
 
   mcBot.on('spawn', () => {
     console.log('Bot de Minecraft conectado.');
+    setInterval(() => {
+      // 3. Escoge un mensaje aleatorio
+      const mensaje = mensajesAleatorios[Math.floor(Math.random() * mensajesAleatorios.length)];
+  
+      // 4. Envía el mensaje al chat de Minecraft
+      mcBot.chat(mensaje);
+  
+      // (Opcional) También podrías enviarlo a Discord si tienes un bot de Discord conectado
+      // const channel = discordClient.channels.cache.get(process.env.CHANNEL_ID);
+      // if (channel) channel.send(mensaje);
+  
+    }, 1 * 60 * 1000); // 20 minutos
   });
 
   mcBot.on('end', () => {
@@ -36,6 +57,22 @@ function createMinecraftBot() {
     if (player.username === 'chipinazo') {
       mcBot.chat('Creator! Welcome back genius.');
     }
+    if (player.username === '_letrasado') {
+      mcBot.chat('Welcome back Letrasado, kisses from el Copas.');
+    }
+    if (player.username === 'MrDavid99') {
+      mcBot.chat('Hey David! I also hate polish and albanians.');
+    }
+    if (player.username === 'Diakhaba') {
+      mcBot.chat('Cómo te huelen los pinrreles.');
+    }
+    if (player.username === 'marcosgo16') {
+      mcBot.chat('Ponte a trabajar bujarra!');
+    }
+    if (player.username === 'PowerXInfinito') {
+      mcBot.chat('Paño de pipí mojao');
+    }
+
     // O enviar un mensaje al chat:
     // bot.chat(`¡Bienvenido, ${player.username}!`);
   });
