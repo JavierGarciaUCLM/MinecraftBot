@@ -52,35 +52,25 @@ function createMinecraftBot() {
     console.error('Error en el bot de Minecraft:', err);
   });
   
-  mcBot.on('playerJoined', (player) => {
-    console.log(`${player.username} se ha unido al servidor`);
-    if (player.username === 'chipinazo') {
-      mcBot.chat('Creator! Welcome back genius.');
-    }
-    if (player.username === '_letrasado') {
-      mcBot.chat('Welcome back Letrasado, kisses from el Copas.');
-    }
-    if (player.username === 'MrDavid99') {
-      mcBot.chat('Hey David! I also hate polish and albanians.');
-    }
-    if (player.username === 'Diakhaba') {
-      mcBot.chat('Cómo te huelen los pinrreles.');
-    }
-    if (player.username === 'marcosgo16') {
-      mcBot.chat('Ponte a trabajar bujarra!');
-    }
-    if (player.username === 'PowerXInfinito') {
-      mcBot.chat('Paño de pipí mojao');
-    }
+  if (player.username === 'chipinazo') {
+    mcBot.chat('Creator! Welcome back genius.');
+  }
+  if (player.username === '_letrasado') {
+    mcBot.chat('Welcome back Letrasado, kisses from el Copas.');
+  }
+  if (player.username === 'MrDavid99') {
+    mcBot.chat('Hey David! I also hate polish and albanians.');
+  }
+  if (player.username === 'Diakhaba') {
+    mcBot.chat('Cómo te huelen los pinrreles.');
+  }
+  if (player.username === 'marcosgo16') {
+    mcBot.chat('Ponte a trabajar bujarra!');
+  }
+  if (player.username === 'PowerXInfinito') {
+    mcBot.chat('Paño de pipí mojao');
+  }
 
-    // O enviar un mensaje al chat:
-    // bot.chat(`¡Bienvenido, ${player.username}!`);
-  });
-  
-  mcBot.on('playerLeft', (player) => {
-    console.log(`${player.username} salió del servidor`);
-    // bot.chat(`Hasta luego, ${player.username}`);
-  });
   
 
   // 2.1 Ejemplo: Enviar mensajes de Minecraft al canal de Discord
