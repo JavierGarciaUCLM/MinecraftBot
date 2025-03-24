@@ -62,7 +62,7 @@ function createMinecraftBot() {
       console.log('Finalizada la carga inicial de jugadores.');
     }, 5000);
       // Esto es lo de enviar los mensajes randoms
-    setInterval(enviarMensajeAleatorio, 1 * 60 * 1000);
+    setInterval(enviarMensajeAleatorio, 13 * 60 * 1000);
   });
 
   mcBot.on('end', () => {
@@ -118,13 +118,13 @@ function createMinecraftBot() {
 
   // 2.1 Ejemplo: Enviar mensajes de Minecraft al canal de Discord
   mcBot.on('chat', (username, message) => {
-    // Evitar que se repita lo que el propio bot escribe
-    if (username === mcBot.username) return;
-
-    // Buscar el canal de Discord y enviar el mensaje
     const channel = discordClient.channels.cache.get(process.env.CHANNEL_ID);
     if (channel) {
-      channel.send(`[${username}] ${message}`);
+      if (username === mcBot.username) {
+        channel.send(`[Bot de Minecraft] ${message}`);
+      } else {
+        channel.send(`[${username}] ${message}`);
+      }
     }
   });
 }
