@@ -8,6 +8,15 @@ require('dotenv').config(); // Carga variables de .env
 // 2. Configuración del bot de Minecraft
 let mcBot; // Variable global para el bot de Minecraft
 
+const mensajesAleatorios = [
+  'I love the Spanish!',
+  'Best clan? The Inquisition.',
+  'Inquisition is always back, no matter what!',
+  'Inquisition won',
+  'We miss you npintea!',
+  'Nikoxlas? Who is him?'
+];
+
 function createMinecraftBot() {
   mcBot = mineflayer.createBot({
     host: process.env.MC_HOST,
@@ -20,6 +29,17 @@ function createMinecraftBot() {
 
   mcBot.on('spawn', () => {
     console.log('Bot de Minecraft conectado.');
+    setInterval(() => {
+      // 3. Escoge un mensaje aleatorio
+      const mensaje = mensajesAleatorios[Math.floor(Math.random() * mensajesAleatorios.length)];
+  
+      // 4. Envía el mensaje al chat de Minecraft
+      mcBot.chat(mensaje);
+  
+  const channel = discordClient.channels.cache.get(process.env.CHANNEL_ID);
+  if (channel) channel.send(mensaje);
+  
+    }, 20 * 60 * 1000); // 20 minutos
   });
 
   mcBot.on('end', () => {
