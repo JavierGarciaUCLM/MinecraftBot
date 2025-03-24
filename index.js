@@ -179,11 +179,18 @@ function createMinecraftBot() {
     if (message.toLowerCase() === '!inquisition') {
       const result = processInquisition(username);
       if (result.success) {
-        mcBot.chat(`${username}, has recibido 25 puntos. Tu saldo total es de ${result.points} puntos.`);
+        mcBot.chat(`${username}, you have recived 25 InquiCoins. Your total bank account is ${result.points}. ¡Viva España!`);
       } else {
         const minutes = Math.ceil(result.remaining / (60 * 1000));
-        mcBot.chat(`${username}, debes esperar aproximadamente ${minutes} minutos para volver a reclamar el bono.`);
+        mcBot.chat(`${username}, you must wait ${minutes} minutes to get more InquiCoins.`);
       }
+    }
+  
+    if (message.toLowerCase() === '!bank') {
+      const db = loadDatabase();
+      // Si el usuario no existe, su saldo es 0
+      const account = db[username] ? db[username].points : 0;
+      mcBot.chat(`${username}, your InquiCoins balance is ${account}. ¡Viva España!`);
     }
   });
 }
