@@ -52,7 +52,7 @@ function createMinecraftBot() {
   });
   
   mcBot.on('playerJoined', (player) => {
-    console.log(`${player.username} se ha unido al servidor`);
+    // console.log(`${player.username} se ha unido al servidor`);
     if (player.username === 'chipinazo') {
       mcBot.chat('Creator! Welcome back genius.');
     }
@@ -84,7 +84,7 @@ function createMinecraftBot() {
   });
   
   mcBot.on('playerLeft', (player) => {
-    console.log(`${player.username} salió del servidor`);
+    // console.log(`${player.username} salió del servidor`);
     // bot.chat(`Hasta luego, ${player.username}`);
     const channel = discordClient.channels.cache.get(process.env.CHANNEL_ID);
   if (channel) {
