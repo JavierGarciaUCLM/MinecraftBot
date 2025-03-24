@@ -30,6 +30,21 @@ function createMinecraftBot() {
   mcBot.on('error', (err) => {
     console.error('Error en el bot de Minecraft:', err);
   });
+  
+  bot.on('playerJoined', (player) => {
+    console.log(`${player.username} se ha unido al servidor`);
+    if (player.username === 'chipinazo') {
+      bot.chat('Welcome back, mister creator!');
+    }
+    // O enviar un mensaje al chat:
+    // bot.chat(`¡Bienvenido, ${player.username}!`);
+  });
+  
+  bot.on('playerLeft', (player) => {
+    console.log(`${player.username} salió del servidor`);
+    // bot.chat(`Hasta luego, ${player.username}`);
+  });
+  
 
   // 2.1 Ejemplo: Enviar mensajes de Minecraft al canal de Discord
   mcBot.on('chat', (username, message) => {
