@@ -41,7 +41,7 @@ function createMinecraftBot() {
     // const channel = discordClient.channels.cache.get(process.env.CHANNEL_ID);
     // if (channel) channel.send(mensaje);
 
-  }, 1 * 60 * 1000); // 15 minutos
+  }, 15 * 60 * 1000); // 15 minutos
   });
 
   mcBot.on('end', () => {
