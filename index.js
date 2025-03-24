@@ -7,7 +7,9 @@ require('dotenv').config(); // Carga variables de .env
 
 // 2. Configuración del bot de Minecraft
 let mcBot; // Variable global para el bot de Minecraft
-const onlinePlayers = new Set();
+const onlinePlayers = new Set(); //Set de users
+let initialLoad = true;
+
 
 function createMinecraftBot() {
   mcBot = mineflayer.createBot({
@@ -24,6 +26,11 @@ function createMinecraftBot() {
     for (const playerName of Object.keys(mcBot.players)) {
       onlinePlayers.add(playerName);
     }
+    // Tras 5 segundos (ajusta el tiempo si quieres), salimos de la "carga inicial"
+    setTimeout(() => {
+      initialLoad = false;
+      console.log('Finalizada la carga inicial de jugadores.');
+    }, 5000);
   });
 
   mcBot.on('end', () => {
@@ -32,12 +39,28 @@ function createMinecraftBot() {
   });
 
   mcBot.on('playerJoined', (player) => {
+    if (initialLoad) return;
     // Si no está en el set, es una conexión "real"
     if (!onlinePlayers.has(player.username)) {
       onlinePlayers.add(player.username);
       if (player.username === 'chipinazo') {
         mcBot.chat('Creator! Welcome back genius.');
-      } 
+      }
+      if (player.username === '_letrasado') {
+        mcBot.chat('Welcome back Letrasado, kisses from el Copas.');
+      }
+      if (player.username === 'MrDavid99') {
+        mcBot.chat('Hey David! I also hate polish and albanians.');
+      }
+      if (player.username === 'Diakhaba') {
+        mcBot.chat('Cómo te huelen los pinrreles.');
+      }
+      if (player.username === 'marcosgo16') {
+        mcBot.chat('Ponte a trabajar bujarra!');
+      }
+      if (player.username === 'PowerXInfinito') {
+        mcBot.chat('Paño de pipí mojao');
+      }
     }
       const channel = discordClient.channels.cache.get(process.env.CHANNEL_ID);
       if (channel) {
@@ -113,6 +136,18 @@ discordClient.on('messageCreate', async (message) => {
   }
   if (message.content.toLowerCase() === '!dani') {
     message.reply('Es maricon');
+  }
+  if (message.content.toLowerCase() === '!online') {
+    // Convierte el set en un array
+    const playersArray = Array.from(onlinePlayers);
+
+    if (playersArray.length === 0) {
+      message.channel.send('No hay jugadores conectados en Minecraft.');
+    } else {
+      // Crea una cadena con los nombres
+      const playersList = playersArray.join(', ');
+      message.channel.send(`Jugadores conectados: ${playersList}`);
+    }
   }
 });
 
