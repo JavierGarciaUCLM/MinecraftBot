@@ -9,6 +9,8 @@ require('dotenv').config(); // Carga variables de .env
 let mcBot; // Variable global para el bot de Minecraft
 const onlinePlayers = new Set(); //Set de users
 let initialLoad = true;
+const fs = require('fs');
+const path = './economy.json';
 
 const mensajesAleatorios = [
   'I love the Spanish!',
@@ -50,6 +52,54 @@ function createMinecraftBot() {
     const mensaje = mensajesAleatorios[indiceAleatorio];
     mcBot.chat(mensaje);
   }
+
+
+//
+//  
+//
+  function loadDatabase() {
+    if (!fs.existsSync(path)) {
+      fs.writeFileSync(path, JSON.stringify({}));
+    }
+    const data = fs.readFileSync(path);
+    return JSON.parse(data);
+  }
+  
+  // Función para guardar la base de datos JSON
+  function saveDatabase(db) {
+    fs.writeFileSync(path, JSON.stringify(db, null, 2));
+  }
+  
+  // Función para otorgar puntos si han pasado 8 horas
+  function processInquisition(minecraftUsername) {
+    const db = loadDatabase();
+    const now = Date.now();
+    const eightHours = 8 * 60 * 60 * 1000; // 8 horas en milisegundos
+  
+    if (!db[minecraftUsername]) {
+      // Si el usuario no existe, lo inicializamos
+      db[minecraftUsername] = {
+        points: 0,
+        lastInquisition: 0
+      };
+    }
+  
+    // Comprueba si han pasado 8 horas desde el último uso del comando
+    if (now - db[minecraftUsername].lastInquisition >= eightHours) {
+      db[minecraftUsername].points += 25;
+      db[minecraftUsername].lastInquisition = now;
+      saveDatabase(db);
+      return { success: true, points: db[minecraftUsername].points };
+    } else {
+      const remaining = eightHours - (now - db[minecraftUsername].lastInquisition);
+      return { success: false, remaining };
+    }
+  }
+
+//
+//
+//
+
 
   mcBot.on('spawn', () => {
     console.log('Bot de Minecraft conectado.');
@@ -126,6 +176,15 @@ function createMinecraftBot() {
         channel.send(`[${username}] ${message}`);
       }
     }
+    if (message.toLowerCase() === '!inquisition') {
+      const result = processInquisition(username);
+      if (result.success) {
+        mcBot.chat(`${username}, has recibido 25 puntos. Tu saldo total es de ${result.points} puntos.`);
+      } else {
+        const minutes = Math.ceil(result.remaining / (60 * 1000));
+        mcBot.chat(`${username}, debes esperar aproximadamente ${minutes} minutos para volver a reclamar el bono.`);
+      }
+    }
   });
 }
 
@@ -165,9 +224,6 @@ discordClient.on('messageCreate', async (message) => {
   // Ejemplo: "!ping" -> el bot de Discord responde con "pong"
   if (message.content.toLowerCase() === '!ping') {
     message.reply('pong');
-  }
-  if (message.content.toLowerCase() === '!dani') {
-    message.reply('Es maricon');
   }
   if (message.content.toLowerCase() === '!online') {
     // Convierte el set en un array
