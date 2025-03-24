@@ -10,6 +10,30 @@ let mcBot; // Variable global para el bot de Minecraft
 const onlinePlayers = new Set(); //Set de users
 let initialLoad = true;
 
+const mensajesAleatorios = [
+  'I love the Spanish!',
+  'Best clan? The Inquisition.',
+  'Inquisition is always back, no matter what!',
+  'Inquisition won',
+  'We miss you npintea...',
+  'Nikoxlas? Who is him?',
+  'INQ WIN',
+  'Never forget 2nd Hispanic Panic',
+  'I hate Poland.',
+  'Man, I miss _letrasado’s mom',
+  'No way I’m cleaning up that paño mojao',
+  'Francis was temporal, Inquisition is forever',
+  'If I ever get to luispatapalo’s house…',
+  'I built a giant Spongebob, what did you do?',
+  'Events? But wait for Diakhaba',
+  'Sleepobot is such a NERD',
+  'MARCOS SUELTA EL CALCETIN',
+  'Hasta los cojones de pretender que no soy español… chipi traeme una caña',
+  'I griefed 3words',
+  'QUAGSMARIA is ETERNAL',
+  'Este malagueño folla como un toro, y sin usar pastillas!'
+];
+
 
 function createMinecraftBot() {
   mcBot = mineflayer.createBot({
@@ -21,6 +45,12 @@ function createMinecraftBot() {
     version: '1.21.4'
   });
 
+  function enviarMensajeAleatorio() {
+    const indiceAleatorio = Math.floor(Math.random() * mensajesAleatorios.length);
+    const mensaje = mensajesAleatorios[indiceAleatorio];
+    mcBot.chat(mensaje);
+  }
+
   mcBot.on('spawn', () => {
     console.log('Bot de Minecraft conectado.');
     for (const playerName of Object.keys(mcBot.players)) {
@@ -31,6 +61,8 @@ function createMinecraftBot() {
       initialLoad = false;
       console.log('Finalizada la carga inicial de jugadores.');
     }, 5000);
+      // Esto es lo de enviar los mensajes randoms
+    setInterval(enviarMensajeAleatorio, 1 * 60 * 1000);
   });
 
   mcBot.on('end', () => {
