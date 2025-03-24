@@ -40,7 +40,7 @@ function createMinecraftBot() {
     // bot.chat(`¡Bienvenido, ${player.username}!`);
   });
   
-  bot.on('playerLeft', (player) => {
+  mcBot.on('playerLeft', (player) => {
     console.log(`${player.username} salió del servidor`);
     // bot.chat(`Hasta luego, ${player.username}`);
   });
