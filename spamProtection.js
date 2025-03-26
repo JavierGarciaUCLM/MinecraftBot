@@ -45,7 +45,7 @@ function isSpamming(username) {
 
   for (const t of times) {
     const diff = now - t;
-    if (diff < 400) {
+    if (diff < 600) {
       shortPeriodCount++;
     }
     if (diff < 1000) {

@@ -27,7 +27,6 @@ async function processInquisition(username) {
   try {
     let user = await Economy.findOne({ username });
     if (!user) {
-      // Si el usuario no existe, lo crea con 25 puntos
       user = new Economy({ username, points: 25, lastInquisition: now });
       await user.save();
       return { success: true, points: user.points };

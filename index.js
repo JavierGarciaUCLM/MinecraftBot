@@ -135,6 +135,8 @@ function createMinecraftBot() {
       mcBot.whisper(username, "You are muted for spam. Wait a minute before talking to the bot.");
       return;
     }
+  
+    // Enviar el mensaje a Discord
     const channel = discordClient.channels.cache.get(process.env.CHANNEL_ID);
     if (channel) {
       if (username === mcBot.username) {
@@ -142,22 +144,31 @@ function createMinecraftBot() {
       } else {
         channel.send(`[${username}] ${message}`);
       }
-      if (message.toLowerCase() === '!inquisition') {
-        const result = await processInquisition(username);
-        if (result.success) {
-          mcBot.chat(`${username}, you have received 25 InquiCoins. Your total bank account is ${result.points}.`);
-        } else if (result.remaining !== undefined) {
-          const minutes = Math.ceil(result.remaining / (60 * 1000));
-          mcBot.chat(`${username}, please wait ${minutes} minutes before receiving more InquiCoins.`);
-        } else {
-          mcBot.chat(`${username}, there was an error processing your request.`);
-        }
     }
+  
+    // Procesar comandos
+    if (message.toLowerCase() === '!inquisition') {
+      processInquisition(username)
+        .then(result => {
+          if (result.success) {
+            mcBot.chat(`${username}, you have received 25 InquiCoins. Your total bank account is ${result.points}.`);
+          } else if (result.remaining !== undefined) {
+            const minutes = Math.ceil(result.remaining / (60 * 1000));
+            mcBot.chat(`${username}, please wait ${minutes} minutes before receiving more InquiCoins.`);
+          } else {
+            mcBot.chat(`${username}, there was an error processing your request.`);
+          }
+        })
+        .catch(err => {
+          console.error('Error en !inquisition:', err);
+          mcBot.chat(`${username}, there was an error processing your request.`);
+        });
+    }
+  
     if (message.toLowerCase().startsWith('!bank')) {
-      //Division del mensaje por espacios, si hay más de 1 pues supone que es el nombre del usuario
       const parts = message.split(' ');
       const targetUsername = (parts.length > 1) ? parts.slice(1).join(' ') : username;
-  
+    
       getBank(targetUsername)
         .then(account => {
           if (targetUsername === username) {
@@ -171,7 +182,6 @@ function createMinecraftBot() {
           mcBot.chat(`${username}, there was an error processing your request.`);
         });
     }
-  }
   });
 }
 
