@@ -148,9 +148,23 @@ function createMinecraftBot() {
           mcBot.chat(`${username}, there was an error processing your request.`);
         }
     }
-    if (message.toLowerCase() === '!bank') {
-      const account = await getBank(username);
-      mcBot.chat(`${username}, your InquiCoins balance is ${account}.`);
+    if (message.toLowerCase().startsWith('!bank')) {
+      //Division del mensaje por espacios, si hay más de 1 pues supone que es el nombre del usuario
+      const parts = message.split(' ');
+      const targetUsername = (parts.length > 1) ? parts.slice(1).join(' ') : username;
+  
+      getBank(targetUsername)
+        .then(account => {
+          if (targetUsername === username) {
+            mcBot.chat(`${username}, your InquiCoins balance is ${account}.`);
+          } else {
+            mcBot.chat(`${username}, ${targetUsername}'s InquiCoins balance is ${account}.`);
+          }
+        })
+        .catch(err => {
+          console.error('Error en !bank:', err);
+          mcBot.chat(`${username}, there was an error processing your request.`);
+        });
     }
   }
   });
