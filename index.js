@@ -5,14 +5,7 @@ const mineflayer = require('mineflayer');
 const { Client, GatewayIntentBits } = require('discord.js');
 require('dotenv').config(); // Carga variables de .env
 const { processInquisition, getBank } = require('./db/economy');
-const discordClient = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent,
-    GatewayIntentBits.GuildMessageReactions
-  ]
-});
+
 
 // 2. Configuración del bot de Minecraft
 let mcBot; // Variable global para el bot de Minecraft
@@ -159,7 +152,14 @@ function createMinecraftBot() {
 // Inicializa el bot de Minecraft
 createMinecraftBot();
 
-
+const discordClient = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+    GatewayIntentBits.GuildMessageReactions
+  ]
+});
 // 3.1 Evento: Bot de Discord listo
 discordClient.once('ready', () => {
   console.log('Bot de Discord conectado como ${discordClient.user.tag}');
