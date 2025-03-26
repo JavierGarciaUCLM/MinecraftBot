@@ -9,6 +9,7 @@
     "dependencies": {
         "discord.js": "^14.0.0",
         "dotenv": "^16.4.7",
-        "mineflayer": "^4.27.0"
+        "mineflayer": "^4.27.0",
+        "mongoose": "^8.13.0"
     }
 }
