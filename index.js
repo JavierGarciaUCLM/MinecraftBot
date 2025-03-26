@@ -3,7 +3,8 @@
 // 1. Importaciones
 const mineflayer = require('mineflayer');
 const { Client, GatewayIntentBits } = require('discord.js');
-require('dotenv').config(); // Carga variables de .env
+require('dotenv').config(); // Carga variables del .env
+const { isSpamming } = require('./spamProtection');
 const { processInquisition, getBank } = require('./db/economy');
 const discordClient = new Client({
   intents: [
@@ -130,6 +131,10 @@ function createMinecraftBot() {
 
   // 2.1 Ejemplo: Enviar mensajes de Minecraft al canal de Discord
   mcBot.on('chat', async (username, message) => {
+    if (isSpamming(username)) {
+      mcBot.whisper(username, "You are muted for spam. Wait a minute before talking to the bot.");
+      return;
+    }
     const channel = discordClient.channels.cache.get(process.env.CHANNEL_ID);
     if (channel) {
       if (username === mcBot.username) {
