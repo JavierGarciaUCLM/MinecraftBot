@@ -5,7 +5,14 @@ const mineflayer = require('mineflayer');
 const { Client, GatewayIntentBits } = require('discord.js');
 require('dotenv').config(); // Carga variables de .env
 const { processInquisition, getBank } = require('./db/economy');
-
+const discordClient = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+    GatewayIntentBits.GuildMessageReactions
+  ]
+});
 
 // 2. Configuración del bot de Minecraft
 let mcBot; // Variable global para el bot de Minecraft
@@ -101,7 +108,7 @@ function createMinecraftBot() {
     }
       const channel = discordClient.channels.cache.get(process.env.CHANNEL_ID);
       if (channel) {
-        channel.send('${player.username} se ha unido al servidor de Minecraft.');
+        channel.send(`${player.username} se ha unido al servidor de Minecraft.`);
       }
   });
   
@@ -112,7 +119,7 @@ function createMinecraftBot() {
     }
     const channel = discordClient.channels.cache.get(process.env.CHANNEL_ID);
     if (channel) {
-      channel.send('${player.username} salió del servidor de Minecraft.');
+      channel.send(`${player.username} salió del servidor de Minecraft.`);
     }
   });
   
@@ -126,24 +133,24 @@ function createMinecraftBot() {
     const channel = discordClient.channels.cache.get(process.env.CHANNEL_ID);
     if (channel) {
       if (username === mcBot.username) {
-        channel.send('[Bot de Minecraft] ${message}');
+        channel.send(`[Bot de Minecraft] ${message}`);
       } else {
-        channel.send('[${username}] ${message}');
+        channel.send(`[${username}] ${message}`);
       }
       if (message.toLowerCase() === '!inquisition') {
         const result = await processInquisition(username);
         if (result.success) {
-          mcBot.chat('${username}, you have received 25 InquiCoins. Your total bank account is ${result.points}.');
+          mcBot.chat(`${username}, you have received 25 InquiCoins. Your total bank account is ${result.points}.`);
         } else if (result.remaining !== undefined) {
           const minutes = Math.ceil(result.remaining / (60 * 1000));
-          mcBot.chat('${username}, please wait ${minutes} minutes before receiving more InquiCoins.');
+          mcBot.chat(`${username}, please wait ${minutes} minutes before receiving more InquiCoins.`);
         } else {
-          mcBot.chat('${username}, there was an error processing your request.');
+          mcBot.chat(`${username}, there was an error processing your request.`);
         }
     }
     if (message.toLowerCase() === '!bank') {
       const account = await getBank(username);
-      mcBot.chat('${username}, your InquiCoins balance is ${account}.');
+      mcBot.chat(`${username}, your InquiCoins balance is ${account}.`);
     }
   }
   });
@@ -152,17 +159,10 @@ function createMinecraftBot() {
 // Inicializa el bot de Minecraft
 createMinecraftBot();
 
-const discordClient = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent,
-    GatewayIntentBits.GuildMessageReactions
-  ]
-});
+
 // 3.1 Evento: Bot de Discord listo
 discordClient.once('ready', () => {
-  console.log('Bot de Discord conectado como ${discordClient.user.tag}');
+  console.log(`Bot de Discord conectado como ${discordClient.user.tag}`);
 });
 
 // 3.2 Evento: Procesar mensajes de Discord
@@ -174,9 +174,9 @@ discordClient.on('messageCreate', async (message) => {
     const msg = message.content.slice(5).trim(); // Extrae el texto luego de "!say "
     if (mcBot && mcBot.player) {
       mcBot.chat(msg);
-      message.channel.send('He enviado el mensaje al servidor: "${msg}"');
+      message.channel.send(`He enviado el mensaje al servidor: "${msg}"`);
     } else {
-      message.channel.send('El bot de Minecraft no está conectado actualmente.');
+      message.channel.send(`El bot de Minecraft no está conectado actualmente.`);
     }
   }
 
@@ -189,11 +189,11 @@ discordClient.on('messageCreate', async (message) => {
     const playersArray = Array.from(onlinePlayers);
 
     if (playersArray.length === 0) {
-      message.channel.send('No hay jugadores conectados en Minecraft.');
+      message.channel.send(`No hay jugadores conectados en Minecraft.`);
     } else {
       // Crea una cadena con los nombres
       const playersList = playersArray.join(', ');
-      message.channel.send('Jugadores conectados: ${playersList}');
+      message.channel.send(`Jugadores conectados: ${playersList}`);
     }
   }
 });
