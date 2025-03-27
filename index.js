@@ -106,6 +106,9 @@ function createMinecraftBot() {
       if (player.username === 'Juane9') {
         mcBot.chat('Joseeeee, tienes la libreta con los ejercicios cariño?');
       }
+      if (player.username === 'xexc') {
+        mcBot.chat('xexc is sexy');
+      }
     }
       const channel = discordClient.channels.cache.get(process.env.CHANNEL_ID);
       if (channel) {
@@ -147,7 +150,7 @@ function createMinecraftBot() {
     }
   
     // Procesar comandos
-    if (message.toLowerCase() === '!inquisition') {
+    if (message.toLowerCase() === '!inq') {
       processInquisition(username)
         .then(result => {
           if (result.success) {
