@@ -3,6 +3,7 @@
 Código ofrecido por el administrador del servidor en https://github.com/c4k3/NoSpam
 Para evitar que los usuarios puedan mutear al bot dentro del propio servidor por explotación de mensajes.
 Integrado totalmente por ChatGPT.
+Igualmente, no funciona por ahora
 
 */
 // Almacena las marcas de tiempo (ms) de los últimos mensajes de cada usuario

@@ -1,25 +1,23 @@
-// db/economy.js
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-// Conectar a MongoDB usando la variable de entorno MONGODB_URI
 mongoose.connect(process.env.MONGODB_URI, {
-
+//Antiguamente aquí descomponía la URI, pero en nuevas versiones no va
 })
 .then(() => console.log('Conectado a MongoDB Atlas'))
 .catch((err) => console.error('Error conectando a MongoDB Atlas:', err));
 
-// Definir un esquema para el sistema de economía
+//Atributos de la BBDD
 const economySchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   points: { type: Number, default: 0 },
   lastInquisition: { type: Number, default: 0 }
 });
 
-// Crear el modelo
+//Crea la tabla con los atributos
 const Economy = mongoose.model('Economy', economySchema);
 
-// Función para procesar el comando "!inquisition"
+//Función para trabajar el comando "!inquisition"
 async function processInquisition(username) {
   const now = Date.now();
   const eightHours = 8 * 60 * 60 * 1000; // 8 horas en milisegundos
