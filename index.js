@@ -167,6 +167,37 @@ function createMinecraftBot() {
           mcBot.chat(`${username}, there was an error processing your request.`);
         });
     }
+
+    if (message.toLowerCase().startsWith('!sendi ')) {
+      const parts = message.split(' ');
+      if (parts.length < 3) {
+        mcBot.chat(`${username}, there was an error, use: !send (name) (quantity)`);
+        return;
+      }
+      
+      const recipient = parts[1];
+      const amount = Number(parts[2]);
+      
+      if (isNaN(amount) || amount <= 0) {
+        mcBot.chat(`${username}, amount to be sent must be greater than 0.`);
+        return;
+      }
+      
+      sendCoins(username, recipient, amount)
+        .then(result => {
+          if (result.success) {
+            mcBot.chat(`${username}, has sent ${amount} InquiCoins to ${recipient}. Your new bank amount is ${result.senderPoints}.`);
+          } else {
+            mcBot.chat(`${username}, error: ${result.message}`);
+          }
+        })
+        .catch(err => {
+          console.error('Error al procesar !send:', err);
+          mcBot.chat(`${username}, there was an error in the transaction.`);
+        });
+      
+      return;
+    }
   
     if (message.toLowerCase().startsWith('!bank')) {
       const parts = message.split(' ');

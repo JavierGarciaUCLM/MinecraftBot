@@ -43,6 +43,40 @@ async function processInquisition(username) {
     return { success: false, error: 'Error en la base de datos' };
   }
 }
+//Función para trabajar el comando "!send"
+async function sendCoins(sender, recipient, amount) {
+  if (sender === recipient) {
+    return { success: false, message: 'No puedes enviarte monedas a ti mismo.' };
+  }
+  
+  const amountNum = Number(amount);
+  if (isNaN(amountNum) || amountNum <= 0) {
+    return { success: false, message: 'Cantidad inválida.' };
+  }
+  
+  try {
+    const senderUser = await Economy.findOne({ username: sender });
+    if (!senderUser || senderUser.points < amountNum) {
+      return { success: false, message: 'No te quedan monedas que enviar.' };
+    }
+    
+    senderUser.points -= amountNum;
+    await senderUser.save();
+    
+    let recipientUser = await Economy.findOne({ username: recipient });
+    if (!recipientUser) {
+      recipientUser = new Economy({ username: recipient, points: amountNum });
+    } else {
+      recipientUser.points += amountNum;
+    }
+    await recipientUser.save();
+    
+    return { success: true, senderPoints: senderUser.points };
+  } catch (error) {
+    console.error('Error en sendCoins:', error);
+    return { success: false, message: 'Error en la transacción.' };
+  }
+}
 
 // Función para consultar el saldo (comando "!bank")
 async function getBank(username) {
@@ -57,5 +91,6 @@ async function getBank(username) {
 
 module.exports = {
   processInquisition,
-  getBank
+  getBank,
+  sendCoins
 };
