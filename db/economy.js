@@ -40,24 +40,24 @@ async function processInquisition(username) {
     }
   } catch (error) {
     console.error('Error en processInquisition:', error);
-    return { success: false, error: 'Error en la base de datos' };
+    return { success: false, error: 'Error in the DB' };
   }
 }
 //Función para trabajar el comando "!send"
 async function sendCoins(sender, recipient, amount) {
   if (sender === recipient) {
-    return { success: false, message: 'No puedes enviarte monedas a ti mismo.' };
+    return { success: false, message: 'You cannot send InqCoins to yourself.' };
   }
   
   const amountNum = Number(amount);
   if (isNaN(amountNum) || amountNum <= 0) {
-    return { success: false, message: 'Cantidad inválida.' };
+    return { success: false, message: 'Invalid amount, must be greater than 0.' };
   }
   
   try {
     const senderUser = await Economy.findOne({ username: sender });
     if (!senderUser || senderUser.points < amountNum) {
-      return { success: false, message: 'No te quedan monedas que enviar.' };
+      return { success: false, message: 'You have no InqCoins.' };
     }
     
     senderUser.points -= amountNum;
@@ -74,7 +74,7 @@ async function sendCoins(sender, recipient, amount) {
     return { success: true, senderPoints: senderUser.points };
   } catch (error) {
     console.error('Error en sendCoins:', error);
-    return { success: false, message: 'Error en la transacción.' };
+    return { success: false, message: 'Error in transaction.' };
   }
 }
 
@@ -84,7 +84,7 @@ async function getBank(username) {
     const user = await Economy.findOne({ username });
     return user ? user.points : 0;
   } catch (error) {
-    console.error('Error consultando el banco:', error);
+    console.error('Error checking bank:', error);
     return 0;
   }
 }
