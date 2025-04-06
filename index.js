@@ -2,7 +2,7 @@ const mineflayer = require('mineflayer');
 const { Client, GatewayIntentBits } = require('discord.js');
 require('dotenv').config(); // Carga variables del .env
 const { isSpamming } = require('./spamProtection');
-const { processInquisition, getBank } = require('./db/economy');
+const { processInquisition, getBank, sendCoins } = require('./db/economy');
 const discordClient = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -168,7 +168,7 @@ function createMinecraftBot() {
         });
     }
 
-    if (message.toLowerCase().startsWith('!sendi ')) {
+    if (message.toLowerCase().startsWith('!send ')) {
       const parts = message.split(' ');
       if (parts.length < 3) {
         mcBot.chat(`${username}, there was an error, use: !send (name) (quantity)`);
