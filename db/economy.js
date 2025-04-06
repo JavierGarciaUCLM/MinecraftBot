@@ -57,7 +57,7 @@ async function sendCoins(sender, recipient, amount) {
   try {
     const senderUser = await Economy.findOne({ username: sender });
     if (!senderUser || senderUser.points < amountNum) {
-      return { success: false, message: 'You have no InqCoins.' };
+      return { success: false, message: 'You have no InqCoins to send...' };
     }
     
     senderUser.points -= amountNum;
