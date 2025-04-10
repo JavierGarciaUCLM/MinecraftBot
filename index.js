@@ -218,7 +218,8 @@ function createMinecraftBot() {
     }
 
     if (message.toLowerCase() === '!top') {
-        then(topUsers => {
+      getTop()
+        .then(topUsers => {
           if (!topUsers || topUsers.length === 0) {
             mcBot.chat(`${username}, no hay usuarios registrados aún.`);
             return;
