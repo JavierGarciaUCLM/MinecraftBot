@@ -2,7 +2,7 @@ const mineflayer = require('mineflayer');
 const { Client, GatewayIntentBits } = require('discord.js');
 require('dotenv').config(); // Carga variables del .env
 const { isSpamming } = require('./spamProtection');
-const { processInquisition, getBank, sendCoins } = require('./db/economy');
+const { processInquisition, getBank, sendCoins, getTop } = require('./db/economy');
 const discordClient = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -215,6 +215,25 @@ function createMinecraftBot() {
           console.error('Error en !bank:', err);
           mcBot.chat(`${username}, there was an error processing your request.`);
         });
+    }
+
+    if (message.toLowerCase() === '!top') {
+        then(topUsers => {
+          if (!topUsers || topUsers.length === 0) {
+            mcBot.chat(`${username}, no hay usuarios registrados aún.`);
+            return;
+          }
+          let reply = "Top 3 InqCoins:";
+          topUsers.forEach((user, index) => {
+            reply += ` ${index + 1}. ${user.username}: ${user.points} InqCoins;`;
+          });
+          mcBot.chat(reply);
+        })
+        .catch(err => {
+          console.error('Error en !top:', err);
+          mcBot.chat(`${username}, error procesando el comando !top.`);
+        });
+      return;
     }
   });
 }

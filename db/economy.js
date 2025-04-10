@@ -89,8 +89,21 @@ async function getBank(username) {
   }
 }
 
+//Comando pa el !top
+async function getTop() {
+  try {
+    // Se ordena de forma descendente por puntos y se limita a 3 resultados
+    const topUsers = await Economy.find({}).sort({ points: -1 }).limit(3);
+    return topUsers;
+  } catch (error) {
+    console.error('Error en getTop:', error);
+    return [];
+  }
+}
+
 module.exports = {
   processInquisition,
   getBank,
-  sendCoins
+  sendCoins,
+  getTop
 };
