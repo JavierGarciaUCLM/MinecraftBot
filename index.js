@@ -285,7 +285,7 @@ mcBot.on('message', (message, position) => {
     const playerName = enterMatch[1].trim();
     const channel = discordClient.channels.cache.get(process.env.CHANNEL_ID);
     if (channel) {
-      channel.send(`${playerName} **ha entrado** de World.`);
+      channel.send(`${playerName} **acaba de entrar** a World.`);
     }
     return;
   }
@@ -295,7 +295,7 @@ mcBot.on('message', (message, position) => {
     const playerName = leaveMatch[1].trim();
     const channel = discordClient.channels.cache.get(process.env.CHANNEL_ID);
     if (channel) {
-      channel.send(`${playerName} **ha salido** de World.`);
+      channel.send(`${playerName} **acaba de salir** de World.`);
     }
     return;
   }
