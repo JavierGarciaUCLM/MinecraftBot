@@ -15,6 +15,8 @@ const discordClient = new Client({
 
 let mcBot;
 const onlinePlayers = new Set(); //Set de users, usado pa el !online, por ejemplo
+const entraWorld = /^(.+?) is now entering the pvp world\.$/i;
+const saleWorld = /^(.+?) is now leaving the pvp world\.$/i;
 let initialLoad = true;
 
 const mensajesAleatorios = [
@@ -236,6 +238,26 @@ function createMinecraftBot() {
         });
       return;
     }
+  
+  const enterMatch = message.match(entraWorld);
+  if (enterMatch) {
+    const playerName = enterMatch[1].trim(); 
+    const channel = discordClient.channels.cache.get(process.env.CHANNEL_ID);
+    if (channel) {
+      channel.send(`${playerName} **ha entrado** de World.`);
+    }
+    return;
+  }
+
+  const leaveMatch = message.match(saleWorld);
+  if (leaveMatch) {
+    const playerName = leaveMatch[1].trim();
+    const channel = discordClient.channels.cache.get(process.env.CHANNEL_ID);
+    if (channel) {
+      channel.send(`${playerName} **ha salido** de World.`);
+    }
+    return;
+  }
   });
 }
 
@@ -247,7 +269,7 @@ discordClient.once('ready', () => {
 });
 
 discordClient.on('messageCreate', async (message) => {
-  if (message.author.bot) return; // Ignora los mensajes de otros bots
+  if (message.author.bot) return; // Ignora los mensajes del propio bot
 
   if (message.content.startsWith('!say ')) {
     const msg = message.content.slice(5).trim(); //Extrae el texto luego de "!say "
