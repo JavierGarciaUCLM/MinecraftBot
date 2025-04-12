@@ -15,8 +15,8 @@ const discordClient = new Client({
 
 let mcBot;
 const onlinePlayers = new Set(); //Set de users, usado pa el !online, por ejemplo
-const entraWorld = /^(.+?) is now entering the pvp world\.$/i;
-const saleWorld = /^(.+?) is now leaving the pvp world\.$/i;
+const entraWorld = /^(.+?) is now entering the pvp world\.?$/i;
+const saleWorld = /^(.+?) is now leaving the pvp world\.?$/i;
 let initialLoad = true;
 
 const mensajesAleatorios = [
@@ -135,27 +135,7 @@ function createMinecraftBot() {
   });
 
   mcBot.on('chat', async (username, message) => {
-    const enterMatch = message.match(entraWorld);
-    if (enterMatch) {
-      const playerName = enterMatch[1].trim(); 
-      const channel = discordClient.channels.cache.get(process.env.CHANNEL_ID);
-      if (channel) {
-        channel.send(`${playerName} **ha entrado** de World.`);
-      }
-      return;
-    }
-
-    const leaveMatch = message.match(saleWorld);
-    if (leaveMatch) {
-      const playerName = leaveMatch[1].trim();
-      const channel = discordClient.channels.cache.get(process.env.CHANNEL_ID);
-      if (channel) {
-        channel.send(`${playerName} **ha salido** de World.`);
-      }
-      return;
-    }
-
-
+    
   //No funciona el antispam, cómo puedo solucionarlo?
     if (isSpamming(username)) {
       mcBot.whisper(username, "You are muted for spam. Wait a minute before talking to the bot.");
@@ -292,6 +272,32 @@ discordClient.on('messageCreate', async (message) => {
       const playersList = playersArray.join(', ');
       message.channel.send(`Jugadores conectados: ${playersList}`);
     }
+  }
+});
+
+mcBot.on('message', (message, position) => {
+
+  const messageText = message.toString();
+  console.log('[MESSAGE EVENT]:', messageText);
+
+  const enterMatch = messageText.match(entraWorld);
+  if (enterMatch) {
+    const playerName = enterMatch[1].trim();
+    const channel = discordClient.channels.cache.get(process.env.CHANNEL_ID);
+    if (channel) {
+      channel.send(`${playerName} **ha entrado** de World.`);
+    }
+    return;
+  }
+
+  const leaveMatch = messageText.match(saleWorld);
+  if (leaveMatch) {
+    const playerName = leaveMatch[1].trim();
+    const channel = discordClient.channels.cache.get(process.env.CHANNEL_ID);
+    if (channel) {
+      channel.send(`${playerName} **ha salido** de World.`);
+    }
+    return;
   }
 });
 
