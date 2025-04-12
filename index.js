@@ -276,8 +276,9 @@ discordClient.on('messageCreate', async (message) => {
 });
 
 mcBot.on('message', (message, position) => {
+
   const messageText = message.toString();
-  
+
   const enterMatch = messageText.match(entraWorld);
   if (enterMatch) {
     const playerName = enterMatch[1].trim();
