@@ -97,7 +97,7 @@ function createMinecraftBot() {
         mcBot.chat('Hey David! I also hate polish and albanians.');
       }
       if (player.username === 'Diakhaba') {
-        mcBot.chat('Cómo te huelen los pinrreles.');
+        mcBot.chat('Fun Fact! Diakhaba is the son of the el Calvo con mullet!.');
       }
       if (player.username === 'marcosgo16') {
         mcBot.chat('Ponte a trabajar bujarra!');
