@@ -43,7 +43,11 @@ const mensajesAleatorios = [
   'Este malagueño folla como un toro, y sin usar pastillas!',
   'Que si power que ya te hemos visto',
   'We love you, PowerHamad',
-  'Flxtrjr PvP logged to escape chipinazo?!?!?'
+  'Flxtrjr PvP logged to escape chipinazo?!?!?',
+  'We hate ImCh1ef!',
+  'Love Spain or Spain will come to you...',
+  'Oye Power, ¿cuándo harás los puentes?',
+  'It has been a long time without doing !inq'
 ];
 
 
