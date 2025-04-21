@@ -102,6 +102,11 @@ async function getTop() {
   }
 }
 
+async function getWelcomeMessage(username) {
+    const doc = await Economy.findOne({ username });
+    return doc?.message || null;
+}
+
 async function setWelcomeMessage(sender, target, newMessage) {
   const COST = 300;
 
@@ -141,5 +146,6 @@ module.exports = {
   getBank,
   sendCoins,
   getTop,
-  setWelcomeMessage
+  setWelcomeMessage, 
+  getWelcomeMessage
 };

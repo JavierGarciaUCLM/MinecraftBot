@@ -2,7 +2,7 @@ const mineflayer = require('mineflayer');
 const { Client, GatewayIntentBits } = require('discord.js');
 require('dotenv').config(); // Carga variables del .env
 const { isSpamming } = require('./spamProtection');
-const { processInquisition, getBank, sendCoins, getTop, setWelcomeMessage } = require('./db/economy');
+const { processInquisition, getBank, sendCoins, getTop, setWelcomeMessage, getWelcomeMessage } = require('./db/economy');
 const discordClient = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -85,12 +85,18 @@ function createMinecraftBot() {
     console.log('El bot de Minecraft se ha desconectado.');
   });
 
-  mcBot.on('playerJoined', (player) => {
+  mcBot.on('playerJoined', async(player) => {
     if (initialLoad) return;
     // Si no está en el set, es una conexión "real", uno de los problemas con las repeticiones solucionado
     // Toca añadir esto a la BBDD y relacionarlo con el ID, más adelante ver cómo
     if (!onlinePlayers.has(player.username)) {
       onlinePlayers.add(player.username);
+      try {
+              const welcome = await getWelcomeMessage(player.username);
+              if (welcome) mcBot.chat(welcome);
+            } catch (e) {
+                console.error('Error leyendo welcome:', e);
+            }
       /* if (player.username === 'chipinazo') {
         mcBot.chat('Creator! Welcome back genius.');
       }
@@ -155,7 +161,7 @@ function createMinecraftBot() {
       const result = await setWelcomeMessage(username, target, newMsg);
 
     if (result.success) {
-      mcBot.chat(`${username}, join message set to ${target} guardado. Your new balance: ${result.senderPoints} InqCoins.`);
+      mcBot.chat(`${username}, join message set to ${target}. Your new balance: ${result.senderPoints} InqCoins.`);
     } else {
       mcBot.chat(`${username}, error: ${result.message}`);
     }
