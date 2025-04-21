@@ -103,7 +103,7 @@ async function getTop() {
 }
 
 async function getWelcomeMessage(username) {
-    const doc = await Economy.findOne({ username });
+    const doc = await Economy.findOne({ username: username });
     return doc?.message || null;
 }
 
@@ -114,31 +114,29 @@ async function setWelcomeMessage(sender, target, newMessage) {
     return { success: false, message: 'Empty message or too many characters (max 140).' };
   }
 
-  try {
-    const senderDoc = await Economy.findOne({ username: sender });
-    if (!senderDoc || senderDoc.points < COST) {
-      return { success: false, message: 'You dont have enough InqCoins (300).' };
-    }
-
-    
-    senderDoc.points -= COST;
-    await senderDoc.save();
-
-    
-    await Economy.updateOne(
-      { username: target },
-      {
-        $set:  { message: newMessage },
-        $setOnInsert: { points: 0, lastInquisition: 0 }
-      },
-      { upsert: true }
-    );                       
-
-    return { success: true, senderPoints: senderDoc.points };
-  } catch (err) {
-    console.error('Error setting the join message:', err);
-    return { success: false, message: 'Error en la base de datos.' };
+  const senderDoc = await Economy.findOne({ username: sender });
+  if (!senderDoc || senderDoc.points < COST) {
+    return { success: false, message: 'You don\'t have enough InqCoins (300).' };
   }
+  senderDoc.points -= COST;
+  await senderDoc.save();
+
+  await Economy.updateOne(
+    { username: target },            
+    {
+      $set: {
+        message: newMessage          
+      },
+      $setOnInsert: {                
+        username:       target,      
+        points:         0,
+        lastInquisition: 0
+      }
+    },
+    { upsert: true }                 
+  );
+
+  return { success: true, senderPoints: senderDoc.points };
 }
 
 module.exports = {

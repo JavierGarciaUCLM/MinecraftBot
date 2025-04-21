@@ -88,22 +88,21 @@ function createMinecraftBot() {
   mcBot.on('playerJoined', async (player) => {
     if (initialLoad) return;
   
-    /* 1️⃣  normaliza el nombre */
-    const name = player.username.toLowerCase();
+    const name = player.username;
   
-    /* 2️⃣  usa siempre la versión minúscula en el Set */
+ 
     if (!onlinePlayers.has(name)) {
       onlinePlayers.add(name);
   
       try {
-        const welcome = await getWelcomeMessage(name);   // ← aquí también minúsculas
+        const welcome = await getWelcomeMessage(name);   
         if (welcome) mcBot.chat(welcome);
       } catch (e) {
         console.error('Error leyendo welcome:', e);
       }
     }
   
-    /* 3️⃣  aviso en Discord — puedes usar player.username original si quieres */
+
     const channel = discordClient.channels.cache.get(process.env.CHANNEL_ID);
     if (channel) channel.send(`${player.username} se ha unido al servidor de Minecraft.`);
   });
