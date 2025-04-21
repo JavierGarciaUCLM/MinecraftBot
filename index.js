@@ -2,7 +2,7 @@ const mineflayer = require('mineflayer');
 const { Client, GatewayIntentBits } = require('discord.js');
 require('dotenv').config(); // Carga variables del .env
 const { isSpamming } = require('./spamProtection');
-const { processInquisition, getBank, sendCoins, getTop } = require('./db/economy');
+const { processInquisition, getBank, sendCoins, getTop, setWelcomeMessage } = require('./db/economy');
 const discordClient = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -146,7 +146,7 @@ function createMinecraftBot() {
       return;
     }
 
-    const jmMatch = message.match(/^#jm\s+(\S+)\s+(.+)/i);
+    const jmMatch = message.match(/^!jm\s+(\S+)\s+(.+)/i);
     if (jmMatch) {
       const target   = jmMatch[1];
       const newMsg   = jmMatch[2];
