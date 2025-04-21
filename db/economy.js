@@ -11,7 +11,8 @@ mongoose.connect(process.env.MONGODB_URI, {
 const economySchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   points: { type: Number, default: 0 },
-  lastInquisition: { type: Number, default: 0 }
+  lastInquisition: { type: Number, default: 0 },
+  message:         { type: String,  default: '' }
 });
 
 //Crea la tabla con los atributos
@@ -101,9 +102,44 @@ async function getTop() {
   }
 }
 
+async function setWelcomeMessage(sender, target, newMessage) {
+  const COST = 300;
+
+  if (!newMessage || newMessage.length > 140) {
+    return { success: false, message: 'Empty message or too many characters (max 140).' };
+  }
+
+  try {
+    const senderDoc = await Economy.findOne({ username: sender });
+    if (!senderDoc || senderDoc.points < COST) {
+      return { success: false, message: 'You dont have enough InqCoins (300).' };
+    }
+
+    
+    senderDoc.points -= COST;
+    await senderDoc.save();
+
+    
+    await Economy.updateOne(
+      { username: target },
+      {
+        $set:  { message: newMessage },
+        $setOnInsert: { points: 0, lastInquisition: 0 }
+      },
+      { upsert: true }
+    );                       
+
+    return { success: true, senderPoints: senderDoc.points };
+  } catch (err) {
+    console.error('Error setting the join message:', err);
+    return { success: false, message: 'Error en la base de datos.' };
+  }
+}
+
 module.exports = {
   processInquisition,
   getBank,
   sendCoins,
-  getTop
+  getTop,
+  setWelcomeMessage
 };

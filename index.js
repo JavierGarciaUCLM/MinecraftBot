@@ -91,7 +91,7 @@ function createMinecraftBot() {
     // Toca añadir esto a la BBDD y relacionarlo con el ID, más adelante ver cómo
     if (!onlinePlayers.has(player.username)) {
       onlinePlayers.add(player.username);
-      if (player.username === 'chipinazo') {
+      /* if (player.username === 'chipinazo') {
         mcBot.chat('Creator! Welcome back genius.');
       }
       if (player.username === '_letrasado') {
@@ -114,8 +114,8 @@ function createMinecraftBot() {
       }
       if (player.username === 'xexc') {
         mcBot.chat('xexc is sexy');
-      }
-    }
+      } */
+    } 
       const channel = discordClient.channels.cache.get(process.env.CHANNEL_ID);
       if (channel) {
         channel.send(`${player.username} se ha unido al servidor de Minecraft.`);
@@ -145,6 +145,22 @@ function createMinecraftBot() {
       mcBot.whisper(username, "You are muted for spam. Wait a minute before talking to the bot.");
       return;
     }
+
+    const jmMatch = message.match(/^#jm\s+(\S+)\s+(.+)/i);
+    if (jmMatch) {
+      const target   = jmMatch[1];
+      const newMsg   = jmMatch[2];
+
+      const { setWelcomeMessage } = require('./db/economy');
+      const result = await setWelcomeMessage(username, target, newMsg);
+
+    if (result.success) {
+      mcBot.chat(`${username}, join message set to ${target} guardado. Your new balance: ${result.senderPoints} InqCoins.`);
+    } else {
+      mcBot.chat(`${username}, error: ${result.message}`);
+    }
+  return;
+}
   
     // Enviar el mensaje a Discord
     const channel = discordClient.channels.cache.get(process.env.CHANNEL_ID);
