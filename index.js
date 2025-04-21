@@ -85,47 +85,27 @@ function createMinecraftBot() {
     console.log('El bot de Minecraft se ha desconectado.');
   });
 
-  mcBot.on('playerJoined', async(player) => {
+  mcBot.on('playerJoined', async (player) => {
     if (initialLoad) return;
-    // Si no está en el set, es una conexión "real", uno de los problemas con las repeticiones solucionado
-    // Toca añadir esto a la BBDD y relacionarlo con el ID, más adelante ver cómo
-    if (!onlinePlayers.has(player.username)) {
-      onlinePlayers.add(player.username);
+  
+    /* 1️⃣  normaliza el nombre */
+    const name = player.username.toLowerCase();
+  
+    /* 2️⃣  usa siempre la versión minúscula en el Set */
+    if (!onlinePlayers.has(name)) {
+      onlinePlayers.add(name);
+  
       try {
-              const welcome = await getWelcomeMessage(player.username);
-              if (welcome) mcBot.chat(welcome);
-            } catch (e) {
-                console.error('Error leyendo welcome:', e);
-            }
-      /* if (player.username === 'chipinazo') {
-        mcBot.chat('Creator! Welcome back genius.');
+        const welcome = await getWelcomeMessage(name);   // ← aquí también minúsculas
+        if (welcome) mcBot.chat(welcome);
+      } catch (e) {
+        console.error('Error leyendo welcome:', e);
       }
-      if (player.username === '_letrasado') {
-        mcBot.chat('Welcome back Letrasado, kisses from el Copas.');
-      }
-      if (player.username === 'MrDavid99') {
-        mcBot.chat('Hey David! I also hate polish and albanians.');
-      }
-      if (player.username === 'Diakhaba') {
-        mcBot.chat('Fun Fact! Diakhaba is the son of the el Calvo con mullet!.');
-      }
-      if (player.username === 'marcosgo16') {
-        mcBot.chat('Ponte a trabajar bujarra!');
-      }
-      if (player.username === 'PowerXInfinito') {
-        mcBot.chat('Paño de pipí mojao');
-      }
-      if (player.username === 'Juane9') {
-        mcBot.chat('Joseeeee, tienes la libreta con los ejercicios cariño?');
-      }
-      if (player.username === 'xexc') {
-        mcBot.chat('xexc is sexy');
-      } */
-    } 
-      const channel = discordClient.channels.cache.get(process.env.CHANNEL_ID);
-      if (channel) {
-        channel.send(`${player.username} se ha unido al servidor de Minecraft.`);
-      }
+    }
+  
+    /* 3️⃣  aviso en Discord — puedes usar player.username original si quieres */
+    const channel = discordClient.channels.cache.get(process.env.CHANNEL_ID);
+    if (channel) channel.send(`${player.username} se ha unido al servidor de Minecraft.`);
   });
   
   mcBot.on('playerLeft', (player) => {
