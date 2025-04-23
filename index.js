@@ -78,7 +78,7 @@ function createMinecraftBot() {
       console.log('Finalizada la carga inicial de jugadores.');
     }, 5000);
       // Esto es lo de enviar los mensajes randoms
-    setInterval(enviarMensajeAleatorio, 13 * 60 * 1000);
+    setInterval(enviarMensajeAleatorio, 20 * 60 * 1000);
   });
 
   mcBot.on('end', () => {
@@ -88,7 +88,7 @@ function createMinecraftBot() {
   mcBot.on('playerJoined', async (player) => {
     if (initialLoad) return;
   
-    const name = player.username;
+    const name = player.username.toLowerCase();
   
  
     if (!onlinePlayers.has(name)) {
