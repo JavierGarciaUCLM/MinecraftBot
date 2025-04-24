@@ -88,7 +88,7 @@ function createMinecraftBot() {
   mcBot.on('playerJoined', async (player) => {
     if (initialLoad) return;
   
-    const name = player.username.toLowerCase();
+    const name = player.username;
   
  
     if (!onlinePlayers.has(name)) {
