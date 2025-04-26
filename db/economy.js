@@ -110,6 +110,13 @@ async function getWelcomeMessage(username) {
 async function setWelcomeMessage(sender, target, newMessage) {
   const COST = 300;
 
+  if (/^\s*\//.test(newMessage)) {
+    return {
+      success : false,
+      message : 'Join message cannot start with “/”, loser!.'
+    };
+  }
+
   if (!newMessage || newMessage.length > 140) {
     return { success: false, message: 'Empty message or too many characters (max 140).' };
   }
