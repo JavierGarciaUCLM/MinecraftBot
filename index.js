@@ -36,7 +36,7 @@ const mensajesAleatorios = [
   'If I ever get to luispatapalo’s house…',
   'I built a giant Spongebob, what did you do?',
   'Events? But wait for Diakhaba',
-  'Sleepobot is such a NERD',
+  'Sleepobot was such a NERD',
   'MARCOS SUELTA EL CALCETIN',
   'Hasta los cojones de pretender que no soy español… chipi traeme una caña',
   'I griefed 3words',
@@ -47,8 +47,10 @@ const mensajesAleatorios = [
   'Flxtrjr PvP logged to escape chipinazo?!?!?',
   'We hate ImCh1ef!',
   'Love Spain or Spain will come to you...',
-  'Oye Power, ¿cuándo harás los puentes?',
-  'It has been a long time without doing !inq'
+  'It has been a long time without doing !inq',
+  'Try out the new !help command!',
+  'Spanish Inquisition wouldnt ask for your main base cords!',
+  'If you ever see PowerXInfinito, run away from him!'
 ];
 
 
