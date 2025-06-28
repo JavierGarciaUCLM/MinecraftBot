@@ -167,7 +167,7 @@ if (fightMatch) {
 
   duelQueue.timeout = setTimeout(() => {
     duelQueue.active = false;
-    mcBot.chat(`⏳  Se acabó el tiempo: reto de ${username} cancelado.`);
+    mcBot.chat(`Time has ended: fight of ${username} has finished.`);
   }, 1 * 60 * 1000);
 
   return;
