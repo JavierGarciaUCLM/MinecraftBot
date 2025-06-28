@@ -2,6 +2,7 @@ const mineflayer = require('mineflayer');
 const { Client, GatewayIntentBits } = require('discord.js');
 require('dotenv').config(); // Carga variables del .env
 const { isSpamming } = require('./spamProtection');
+const duelQueue = { active: false, challenger: null, amount: 0, timeout: null }; 
 const { processInquisition, getBank, sendCoins, getTop, setWelcomeMessage, getWelcomeMessage } = require('./db/economy');
 const discordClient = new Client({
   intents: [
@@ -389,5 +390,13 @@ mcBot.on('message', (message, position) => {
     return;
   }
 });
+
+async function transferCoins(fromUser, toUser, amount) {
+  if (fromUser === toUser) {
+    return;
+  }
+  const result = await sendCoins(fromUser, toUser, amount);
+  if (!result.success) throw new Error(result.message);
+}
 
 discordClient.login(process.env.DISCORD_TOKEN);
