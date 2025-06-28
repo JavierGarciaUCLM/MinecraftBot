@@ -148,7 +148,7 @@ if (fightMatch) {
   try {
     const saldo = await getBank(username);
     if (saldo < amount) {
-      mcBot.chat(`${username}, you dont have enough InquiCoins (saldo: ${saldo}).`);
+      mcBot.chat(`${username}, you dont have enough InquiCoins (Bank: ${saldo}) InquiCoins.`);
       return;
     }
   } catch (e) {
@@ -209,7 +209,7 @@ if (message.toLowerCase() === '!accept') {
       transferCoins(winner, winner,  amount)    
     ]);
 
-    mcBot.chat(`¡${winner} wins the fight and takes ${amount * 2} InquiCoins!`);
+    mcBot.chat(`${winner} wins the fight and takes ${amount * 2} InquiCoins!`);
   } catch (e) {
     mcBot.chat(`There was an error moving your coins. Contact to chipinazo.`);
     console.error(e);
