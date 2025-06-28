@@ -131,10 +131,95 @@ function createMinecraftBot() {
       return;
     }
 
+    const fightMatch = message.match(/^!fight\s+(\d+)$/i);
+if (fightMatch) {
+  const amount = Number(fightMatch[1]);
+
+  if (duelQueue.active) {
+    mcBot.chat(`${username}, There's a fight in progress. Wait until it finishes.`);
+    return;
+  }
+  if (amount <= 0 || Number.isNaN(amount)) {
+    mcBot.chat(`${username}, must be an amount higher than 0.`);
+    return;
+  }
+
+  try {
+    const saldo = await getBank(username);
+    if (saldo < amount) {
+      mcBot.chat(`${username}, you dont have enough InquiCoins (saldo: ${saldo}).`);
+      return;
+    }
+  } catch (e) {
+    mcBot.chat(`${username}, error consulting your InquiCoins.`);
+    console.error(e);
+    return;
+  }
+
+  duelQueue.active      = true;
+  duelQueue.challenger  = username;
+  duelQueue.amount      = amount;
+
+  mcBot.chat(`${username} is fighting somebody who says !accept for ${amount} InquiCoins. 1 minute to end!`);
+
+  duelQueue.timeout = setTimeout(() => {
+    duelQueue.active = false;
+    mcBot.chat(`⏳  Se acabó el tiempo: reto de ${username} cancelado.`);
+  }, 1 * 60 * 1000);
+
+  return;
+}
+
+if (message.toLowerCase() === '!accept') {
+  if (!duelQueue.active) {
+    mcBot.chat(`${username}, nobody is fighting right now...`);
+    return;
+  }
+  if (username === duelQueue.challenger) {
+    mcBot.chat(`${username}, you cannot fight yourself.`);
+    return;
+  }
+
+  const amount = duelQueue.amount;
+  const challenger = duelQueue.challenger;
+  const opponent   = username;
+
+  clearTimeout(duelQueue.timeout);
+  duelQueue.active = false;
+
+  try {
+    const [saldoCh, saldoOp] = await Promise.all([getBank(challenger), getBank(opponent)]);
+    if (saldoCh < amount || saldoOp < amount) {
+      mcBot.chat(`One of the player doesnt have enough InquiCoins. Fight is over.`);
+      return;
+    }
+  } catch (e) {
+    mcBot.chat(`Error checking bank, try again.`);
+    console.error(e);
+    return;
+  }
+
+  const winner = Math.random() < 0.5 ? challenger : opponent;
+  const loser  = winner === challenger ? opponent : challenger;
+
+  try {
+    await Promise.all([
+      transferCoins(loser, winner, amount),      
+      transferCoins(winner, winner,  amount)    
+    ]);
+
+    mcBot.chat(`¡${winner} wins the fight and takes ${amount * 2} InquiCoins!`);
+  } catch (e) {
+    mcBot.chat(`There was an error moving your coins. Contact to chipinazo.`);
+    console.error(e);
+  }
+  return;
+}
+
     const jmMatch = message.match(/^!jm\s+(\S+)\s+(.+)/i);
     if (jmMatch) {
       const target   = jmMatch[1];
-      const newMsg   = jmMatch[2];
+      const newMsg   = jmMatch[2]
 
       const { setWelcomeMessage } = require('./db/economy');
       const result = await setWelcomeMessage(username, target, newMsg);
