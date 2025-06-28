@@ -242,8 +242,11 @@ if (message.toLowerCase() === '!accept') {
         channel.send(`[${username}] ${message}`);
       }
     }
+
+    if (message.toLowerCase() === '!help'){
+      mcBot.chat(`/msg ${username} !inq, !send (name) (quantity) || !bank: Check your InquiCoins || !top: Top 3 Holders || !jm (name) (message): Set a join message || !fight (quantity): Start a fight with another player, !accept to accept.`);
+    }
   
-    //Comandos del minecraft
     if (message.toLowerCase() === '!inq') {
       processInquisition(username)
         .then(result => {
