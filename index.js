@@ -150,7 +150,7 @@ if (fightMatch) {
   try {
     const saldo = await getBank(username);
     if (saldo < amount) {
-      mcBot.chat(`${username}, you dont have enough InquiCoins (Bank: ${saldo}) InquiCoins.`);
+      mcBot.chat(`${username}, you dont have enough InquiCoins (Bank: ${saldo}).`);
       return;
     }
   } catch (e) {
