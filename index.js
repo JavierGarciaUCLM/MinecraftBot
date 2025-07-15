@@ -61,7 +61,7 @@ function createMinecraftBot() {
     username: process.env.MC_USERNAME,
     auth: 'microsoft',
     refreshToken: process.env.REFRESH_TOKEN,
-    version: '1.21.4'
+    version: '1.21.7'
   });
 
   function enviarMensajeAleatorio() {
